@@ -28,9 +28,35 @@ print user_json[unicode('user')][unicode('user_token')]
 
 print 'Searching mixes'
 
-mixes = urllib2.urlopen('http://8tracks.com/mix_sets/all.json?include=mixes&api_key='
+mixes = urllib2.urlopen('http://8tracks.com/mix_sets/tags:chill:recent.json?include=mixes&api_key='
 	+api_key+'api_version=3')
 json_mixes = json.load(mixes)
 
 for mix in json_mixes[unicode('mix_set')][unicode('mixes')]:
-	print mix[unicode('name')]
+	mixid = mix[unicode('id')]
+	print mix[unicode('name')] + ' ' + str(mixid)
+
+playtoken_url = urllib2.urlopen('http://8tracks.com/sets/new.json?api_key='+api_key
+	+'api_version=3')
+
+playtoken_json = json.load(playtoken_url)
+
+playtoken = playtoken_json[unicode('play_token')]
+
+print playtoken
+
+print 'stream url'
+
+play_url = urllib2.urlopen('http://8tracks.com/sets/'+str(playtoken)+'/play.json?mix_id='
+	+str(mixid)+'&api_key=' + api_key+'&api_version=3')
+play_json = json.load(play_url)
+
+stream_url = play_json['set']['track']['track_file_stream_url']
+print stream_url
+
+
+
+
+
+
+

@@ -28,7 +28,7 @@ print user_json[unicode('user')][unicode('user_token')]
 
 print 'Searching mixes'
 
-mixes = urllib2.urlopen('http://8tracks.com/mix_sets/tags:chill:recent.json?include=mixes&api_key='
+mixes = urllib2.urlopen('http://8tracks.com/mix_sets/tags:edm:popular.json?include=mixes&api_key='
 	+api_key+'api_version=3')
 json_mixes = json.load(mixes)
 

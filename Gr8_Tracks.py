@@ -2,11 +2,17 @@ import urllib2, urllib, json, time
 
 class Gr8_Tracks():
 
-	def __init__(self, api_key, username, password, api_version='3'):
+	currentMix_json = None
+	next_mix_json = None
+	current_song = None
+	next_song = None
+
+	def __init__(self, api_key, username, password, safe=False, api_version='3'):
 		self.api_key = api_key
 		self.username = username
 		self.password = password
 		self.api_version = api_version
+		self.safe = safe
 
 		user_data = {'login':self.username, 
 			'password':self.password, 'api_version':self.api_version}
@@ -30,13 +36,13 @@ class Gr8_Tracks():
 
 	def search_mix(self, searchType, keys = None, sort = None, safe = False ):
 		base_url_head = 'http://8tracks.com/mix_sets/'
-		base_url_tail = '.json?include=mixes&api_key='+self.api_key+'api_version='+self.api_version
+		base_url_tail = '.json?include=mixes&api_key='+self.api_key+'&api_version='+self.api_version
 
 		if searchType is 'all':
 			params = 'all'
 			if sort is not None:
 				params = params + ':' + sort
-			if safe is True:
+			if safe is True or self.safe is True:
 				params = params + ':safe'
 			url = base_url_head + params + base_url_tail
 
@@ -49,7 +55,7 @@ class Gr8_Tracks():
 			params = params[:-1]
 			if sort is not None:
 				params = params + ':' + sort
-			if safe is True:
+			if safe is True or self.safe is True:
 				params = params + ':safe'
 			url = base_url_head + params + base_url_tail
 
@@ -64,7 +70,7 @@ class Gr8_Tracks():
 			params = params[:-1]
 			if sort is not None:
 				params = params + ':' + sort
-			if safe is True:
+			if safe is True or self.safe is True:
 				params = params + ':safe'
 			url = base_url_head + params + base_url_tail
 
@@ -76,25 +82,54 @@ class Gr8_Tracks():
 
 		return mixes_json
 
-	def get_similar_mix( playtoken=None, mixId=None ):
+	def get_similar_mix( self, playtoken=None, mixId=None ):
 		if mixId is None:
-			mixId = str(self.currentMix_json[unicode('id')])
+			mixId = self.currentMix_json[unicode('id')]
 		if playtoken is None:
 			playtoken = self.playtoken
-		next_mix = urllib2.urlopen('http://8tracks.com/sets/'+playtoken+'next_mix.json?mix_id='+mixId
-			+'api_version='+self.api_version)
 
-		self.next_mix_json = json.load(next_mix)
-		return self.next_mix_json
+		next_mix = urllib2.urlopen('http://8tracks.com/sets/'+str(playtoken)+'/next_mix.json?api_key='+self.api_key+'&mix_id='+str(mixId))
+
+		next_mix_json = json.load(next_mix)
+		
+		return next_mix_json[unicode('next_mix')]
+
+	def first_song(self):
+		if self.currentMix_json is None:
+			pass #throw error
+
+		mixId = self.currentMix_json[unicode('id')]
+		mixUrl = ('http://8tracks.com/sets/'+str(self.playtoken)+'/play.json?mix_id='
+			+str(self.currentMix_json[unicode('id')])+'&api_key='+str(self.api_key)+'&api_version='+str(self.api_version))
+
+		stream_url = urllib2.urlopen(mixUrl)
+
+		self.current_song = json.load(stream_url)
+
+		return self.current_song
 
 
 player = Gr8_Tracks( 'ef1b85bdb35b68b0f7ce0f7d6a575c528e600405', 'justin.prather1',
 	'camerasrule')
 
-player.search_mix('tags', ['hey', 'you'], 'recent', safe = True)
+print player.get_play_token()
 
+search_results = player.search_mix('tags', ['dubstep', 'chill'], 'recent')
 
+for i in range(0,len(search_results[unicode('mix_set')][unicode('mixes')])):
+	print str(i) + ') ' + search_results[unicode('mix_set')][unicode('mixes')][i][unicode('name')]
 
+print 'Enter mix number:'
+player.currentMix_json = search_results[unicode('mix_set')][unicode('mixes')][int(raw_input())]
+
+print player.currentMix_json[unicode('name')]
+
+print 'related mix\n'
+print player.get_similar_mix()[unicode('name')]
+
+player.first_song()
+
+print player.current_song
 
 
 

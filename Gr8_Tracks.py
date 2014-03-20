@@ -94,7 +94,7 @@ class Gr8_Tracks():
 		
 		return next_mix_json[unicode('next_mix')]
 
-	def first_song(self):
+	def get_first_song(self):
 		if self.currentMix_json is None:
 			pass #throw error
 
@@ -107,6 +107,20 @@ class Gr8_Tracks():
 		self.current_song = json.load(stream_url)
 
 		return self.current_song
+
+	def get_next_song(self):
+		if self.currentMix_json is None:
+			pass #throw error
+
+		mixId = self.currentMix_json[unicode('id')]
+		mixUrl = ('http://8tracks.com/sets/'+str(self.playtoken)+'/next.json?mix_id='
+			+str(self.currentMix_json[unicode('id')])+'&api_key='+str(self.api_key)+'&api_version='+str(self.api_version))
+
+		stream_url = urllib2.urlopen(mixUrl)
+
+		self.next_song = json.load(stream_url)
+
+		return self.next_song
 
 
 player = Gr8_Tracks( 'ef1b85bdb35b68b0f7ce0f7d6a575c528e600405', 'justin.prather1',
@@ -127,11 +141,18 @@ print player.currentMix_json[unicode('name')]
 print 'related mix\n'
 print player.get_similar_mix()[unicode('name')]
 
-player.first_song()
+player.get_first_song()
 
-print player.current_song
+print player.current_song[unicode('set')][unicode('track')][unicode('name')]
+
+player.get_next_song()
+
+print player.next_song[unicode('set')][unicode('track')][unicode('name')]
 
 
+player.get_next_song()
+
+print player.next_song[unicode('set')][unicode('track')][unicode('name')]
 
 
 

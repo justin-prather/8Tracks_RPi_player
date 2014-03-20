@@ -122,6 +122,9 @@ class Gr8_Tracks():
 
 		return self.next_song
 
+	def play_song(self):
+		pass
+
 
 player = Gr8_Tracks( 'ef1b85bdb35b68b0f7ce0f7d6a575c528e600405', 'justin.prather1',
 	'camerasrule')
@@ -144,6 +147,12 @@ print player.get_similar_mix()[unicode('name')]
 player.get_first_song()
 
 print player.current_song[unicode('set')][unicode('track')][unicode('name')]
+url = player.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
+
+#print player.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
+
+link = urllib2.urlopen(url)
+print link.geturl()
 
 player.get_next_song()
 

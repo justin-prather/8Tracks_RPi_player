@@ -149,10 +149,10 @@ player.get_first_song()
 print player.current_song[unicode('set')][unicode('track')][unicode('name')]
 url = player.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
 
-#print player.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
+print player.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
 
 link = urllib2.urlopen(url)
-print link.geturl()
+#print link.geturl()
 
 player.get_next_song()
 

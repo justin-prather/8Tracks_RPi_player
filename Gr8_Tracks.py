@@ -1,4 +1,5 @@
 import urllib2, urllib, json, time
+import vlc
 
 class Gr8_Tracks():
 
@@ -6,6 +7,7 @@ class Gr8_Tracks():
 	next_mix_json = None
 	current_song = None
 	next_song = None
+	vlc_player = None
 
 	def __init__(self, api_key, username, password, safe=False, api_version='3'):
 		self.api_key = api_key
@@ -122,8 +124,19 @@ class Gr8_Tracks():
 
 		return self.next_song
 
-	def play_song(self):
-		pass
+	def play_mix(self):
+		if self.vlc_player is None:
+			self.vlc_player = vlc.MediaListPlayer()
+		
+		song_list = vlc.MediaList([])
+
+		self.vlc_player.set_media_list(song_list)
+
+		self.get_first_song()
+
+		song_list.add_media(self.current_songcurrent_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')].encode('utf-8'))
+
+		self.vlc_player.play()
 
 
 player = Gr8_Tracks( 'ef1b85bdb35b68b0f7ce0f7d6a575c528e600405', 'justin.prather1',
@@ -139,30 +152,28 @@ for i in range(0,len(search_results[unicode('mix_set')][unicode('mixes')])):
 print 'Enter mix number:'
 player.currentMix_json = search_results[unicode('mix_set')][unicode('mixes')][int(raw_input())]
 
-print player.currentMix_json[unicode('name')]
+player.play_mix()
 
-print 'related mix\n'
-print player.get_similar_mix()[unicode('name')]
+# print player.currentMix_json[unicode('name')]
 
-player.get_first_song()
+# print 'related mix\n'
+# print player.get_similar_mix()[unicode('name')]
 
-print player.current_song[unicode('set')][unicode('track')][unicode('name')]
-url = player.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
+# player.get_first_song()
 
-print player.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
+# print player.current_song[unicode('set')][unicode('track')][unicode('name')]
 
-link = urllib2.urlopen(url)
-#print link.geturl()
+# print player.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
 
-player.get_next_song()
+# player.get_next_song()
 
-print player.next_song[unicode('set')][unicode('track')][unicode('name')]
+# print player.next_song[unicode('set')][unicode('track')][unicode('name')]
+# print player.next_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
 
+# player.get_next_song()
 
-player.get_next_song()
-
-print player.next_song[unicode('set')][unicode('track')][unicode('name')]
-
+# print player.next_song[unicode('set')][unicode('track')][unicode('name')]
+# print player.next_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
 
 
 

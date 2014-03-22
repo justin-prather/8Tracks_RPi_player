@@ -130,12 +130,13 @@ class Gr8_Tracks():
 		
 		song_list = vlc.MediaList([])
 
-		self.vlc_player.set_media_list(song_list)
+#		self.vlc_player.set_media_list(song_list)
 
 		self.get_first_song()
 
-		song_list.add_media(self.current_songcurrent_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')].encode('utf-8'))
+		song_list.add_media(self.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')].encode('utf-8'))
 
+		self.vlc_player.set_media_list(song_list)
 		self.vlc_player.play()
 
 
@@ -147,13 +148,15 @@ print player.get_play_token()
 search_results = player.search_mix('tags', ['dubstep', 'chill'], 'recent')
 
 for i in range(0,len(search_results[unicode('mix_set')][unicode('mixes')])):
-	print str(i) + ') ' + search_results[unicode('mix_set')][unicode('mixes')][i][unicode('name')]
+	print str(i) + ') ' + search_results[unicode('mix_set')][unicode('mixes')][i][unicode('name')].encode('utf-8')
 
 print 'Enter mix number:'
 player.currentMix_json = search_results[unicode('mix_set')][unicode('mixes')][int(raw_input())]
 
 player.play_mix()
-
+time.sleep(5)
+while player.vlc_player.is_playing():
+	pass
 # print player.currentMix_json[unicode('name')]
 
 # print 'related mix\n'

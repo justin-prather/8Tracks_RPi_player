@@ -124,20 +124,38 @@ class Gr8_Tracks():
 
 		return self.next_song
 
-	def play_mix(self):
+	def play_song(self):
 		if self.vlc_player is None:
-			self.vlc_player = vlc.MediaListPlayer()
-		
-		song_list = vlc.MediaList([])
+			i = vlc.Instance()
+			self.vlc_player = vlc.MediaPlayer(i,'')
 
-#		self.vlc_player.set_media_list(song_list)
+		url = self.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')].encode('utf-8')
+		if 'https' in url:
+			url = url.replace('https', 'http')
 
-		self.get_first_song()
+		m = vlc.Media(url)
+		self.vlc_player.set_media(m)
 
-		song_list.add_media(self.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')].encode('utf-8'))
-
-		self.vlc_player.set_media_list(song_list)
 		self.vlc_player.play()
+
+	def play_mix(self):
+		player.get_first_song()
+
+		player.play_song()
+
+		while( self.current_song[u'set'][u'at_end'] is False ):
+			player.get_next_song()
+
+			print self.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')].encode('utf-8')
+
+			while not player.vlc_player.is_playing():
+				pass
+			while player.vlc_player.is_playing():
+				pass
+
+			player.current_song = player.next_song
+
+			player.play_song() 
 
 
 player = Gr8_Tracks( 'ef1b85bdb35b68b0f7ce0f7d6a575c528e600405', 'justin.prather1',
@@ -153,10 +171,12 @@ for i in range(0,len(search_results[unicode('mix_set')][unicode('mixes')])):
 print 'Enter mix number:'
 player.currentMix_json = search_results[unicode('mix_set')][unicode('mixes')][int(raw_input())]
 
-player.play_mix()
-time.sleep(5)
-while player.vlc_player.is_playing():
-	pass
+import sys
+
+try:
+	player.play_mix()
+except KeyboardInterrupt:
+	sys.exit(0)
 # print player.currentMix_json[unicode('name')]
 
 # print 'related mix\n'

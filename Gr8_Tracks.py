@@ -8,6 +8,7 @@ class Gr8_Tracks():
 	current_song = None
 	next_song = None
 	vlc_player = None
+	at_end = False
 
 	def __init__(self, api_key, username, password, safe=False, api_version='3'):
 		self.api_key = api_key
@@ -124,6 +125,9 @@ class Gr8_Tracks():
 
 		return self.next_song
 
+	def callback(self, event):
+		self.at_end = True
+
 	def play_song(self):
 		if self.vlc_player is None:
 			i = vlc.Instance()
@@ -139,23 +143,32 @@ class Gr8_Tracks():
 		self.vlc_player.play()
 
 	def play_mix(self):
-		player.get_first_song()
+		self.get_first_song()
 
-		player.play_song()
+		self.play_song()
+
+		manager = self.vlc_player.event_manager()
+		manager.event_attach(vlc.EventType.MediaPlayerEndReached, self.callback)
+
+		self.get_next_song()
+		print self.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')].encode('utf-8')
 
 		while( self.current_song[u'set'][u'at_end'] is False ):
-			player.get_next_song()
 
-			print self.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')].encode('utf-8')
+			if self.at_end:
+				self.at_end = False
+				self.current_song = self.next_song
+				self.play_song()
+				self.get_next_song()
+				print self.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')].encode('utf-8')
+			# while not self.vlc_player.is_playing():
+			# 	pass
+			# while self.vlc_player.is_playing():
+			# 	pass
 
-			while not player.vlc_player.is_playing():
-				pass
-			while player.vlc_player.is_playing():
-				pass
+			# self.current_song = self.next_song
 
-			player.current_song = player.next_song
-
-			player.play_song() 
+			# self.play_song() 
 
 
 player = Gr8_Tracks( 'ef1b85bdb35b68b0f7ce0f7d6a575c528e600405', 'justin.prather1',
@@ -163,7 +176,7 @@ player = Gr8_Tracks( 'ef1b85bdb35b68b0f7ce0f7d6a575c528e600405', 'justin.prather
 
 print player.get_play_token()
 
-search_results = player.search_mix('tags', ['dubstep', 'chill'], 'recent')
+search_results = player.search_mix('tags', ['edm', 'party'], 'recent')
 
 for i in range(0,len(search_results[unicode('mix_set')][unicode('mixes')])):
 	print str(i) + ') ' + search_results[unicode('mix_set')][unicode('mixes')][i][unicode('name')].encode('utf-8')
@@ -171,33 +184,5 @@ for i in range(0,len(search_results[unicode('mix_set')][unicode('mixes')])):
 print 'Enter mix number:'
 player.currentMix_json = search_results[unicode('mix_set')][unicode('mixes')][int(raw_input())]
 
-import sys
-
-try:
-	player.play_mix()
-except KeyboardInterrupt:
-	sys.exit(0)
-# print player.currentMix_json[unicode('name')]
-
-# print 'related mix\n'
-# print player.get_similar_mix()[unicode('name')]
-
-# player.get_first_song()
-
-# print player.current_song[unicode('set')][unicode('track')][unicode('name')]
-
-# print player.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
-
-# player.get_next_song()
-
-# print player.next_song[unicode('set')][unicode('track')][unicode('name')]
-# print player.next_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
-
-# player.get_next_song()
-
-# print player.next_song[unicode('set')][unicode('track')][unicode('name')]
-# print player.next_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')]
-
-
-
+player.play_mix()
 

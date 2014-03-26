@@ -153,22 +153,17 @@ class Gr8_Tracks():
 		self.get_next_song()
 		print self.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')].encode('utf-8')
 
-		while( self.current_song[u'set'][u'at_end'] is False ):
+		while True:
 
 			if self.at_end:
+				if self.current_song[u'set'][u'at_end'] is True:
+					print 'End of mix'
+					break
 				self.at_end = False
 				self.current_song = self.next_song
 				self.play_song()
 				self.get_next_song()
 				print self.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')].encode('utf-8')
-			# while not self.vlc_player.is_playing():
-			# 	pass
-			# while self.vlc_player.is_playing():
-			# 	pass
-
-			# self.current_song = self.next_song
-
-			# self.play_song() 
 
 
 player = Gr8_Tracks( 'ef1b85bdb35b68b0f7ce0f7d6a575c528e600405', 'justin.prather1',

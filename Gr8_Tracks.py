@@ -166,18 +166,19 @@ class Gr8_Tracks():
 				print self.current_song[unicode('set')][unicode('track')][unicode('track_file_stream_url')].encode('utf-8')
 
 
-player = Gr8_Tracks( 'ef1b85bdb35b68b0f7ce0f7d6a575c528e600405', 'justin.prather1',
-	'camerasrule')
+if __name__ == '__main__':
+	player = Gr8_Tracks( 'ef1b85bdb35b68b0f7ce0f7d6a575c528e600405', 'justin.prather1',
+			     'camerasrule')
 
-print player.get_play_token()
+	print player.get_play_token()
 
-search_results = player.search_mix('tags', ['edm', 'party'], 'recent')
+	search_results = player.search_mix('tags', ['edm', 'party'], 'recent')
 
-for i in range(0,len(search_results[unicode('mix_set')][unicode('mixes')])):
-	print str(i) + ') ' + search_results[unicode('mix_set')][unicode('mixes')][i][unicode('name')].encode('utf-8')
+	for i in range(0,len(search_results[unicode('mix_set')][unicode('mixes')])):
+		print str(i) + ') ' + search_results[unicode('mix_set')][unicode('mixes')][i][unicode('name')].encode('utf-8')
 
-print 'Enter mix number:'
-player.currentMix_json = search_results[unicode('mix_set')][unicode('mixes')][int(raw_input())]
+	print 'Enter mix number:'
+	player.currentMix_json = search_results[unicode('mix_set')][unicode('mixes')][int(raw_input())]
 
-player.play_mix()
+	player.play_mix()
 

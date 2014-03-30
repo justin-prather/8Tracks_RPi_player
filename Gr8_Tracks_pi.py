@@ -42,7 +42,7 @@ class Gr8_Tracks():
 		base_url_head = 'http://8tracks.com/mix_sets/'
 		base_url_tail = '.json?include=mixes&api_key='+self.api_key+'&api_version='+self.api_version
 
-		if searchType is 'all':
+		if searchType == 'all':
 			params = 'all'
 			if sort is not None:
 				params = params + ':' + sort
@@ -50,7 +50,7 @@ class Gr8_Tracks():
 				params = params + ':safe'
 			url = base_url_head + params + base_url_tail
 
-		elif searchType is 'tags':
+		elif searchType == 'tags':
 			params = 'tags'
 			if keys is not None:
 				params = params + ':'
@@ -63,7 +63,7 @@ class Gr8_Tracks():
 				params = params + ':safe'
 			url = base_url_head + params + base_url_tail
 
-		elif searchType is 'keyword':
+		elif searchType == 'keyword':
 			if keys is None:
 				pass #throw exception
 			params = 'keyword'

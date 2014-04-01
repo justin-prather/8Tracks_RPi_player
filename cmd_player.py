@@ -1,6 +1,7 @@
 from Gr8_Tracks import Gr8_Tracks
 import threading
 import vlc
+import os
 
 is_playing = False
 toggle_pause = False
@@ -44,6 +45,11 @@ def play():
 		player.currentMix_json = player.get_similar_mix()
 
 #======================================================================================
+os.putenv('SDL_VIDEODRIVER', 'fbcon')
+os.putenv('SDL_FBDEV'      , '/dev/fb1')
+os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
+os.putenv('SDL_MOUSEDEV'   , '/dev/input/touchscreen')
+
 
 player = Gr8_Tracks( 'ef1b85bdb35b68b0f7ce0f7d6a575c528e600405', 'justin.prather1',
 			     'camerasrule')
@@ -68,10 +74,11 @@ while True:
 		print str(i) + ') ' + search_results[unicode('mix_set')][unicode('mixes')][i][unicode('name')].encode('utf-8')
 
 	print 'Enter mix number:'
+	index = int(raw_input())
 	if is_playing is True:
 		is_playing = False
 		t.join()
-	player.currentMix_json = search_results[unicode('mix_set')][unicode('mixes')][int(raw_input())]
+	player.currentMix_json = search_results[unicode('mix_set')][unicode('mixes')][index]
 
 	t = threading.Thread( target = play )
 	t.start()

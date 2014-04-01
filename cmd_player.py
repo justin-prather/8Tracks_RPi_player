@@ -76,28 +76,28 @@ while True:
 	t = threading.Thread( target = play )
 	t.start()
 
-		try:
-			while True:
-				user_input = str(raw_input("Enter a command: "))
-				
-				if user_input == "pause":
-					toggle_pause = True
-				elif user_input == 'next':
-					next = True
-				elif user_input == 'search':
-					break
-				elif user_input == 'exit':
-					is_playing = False
-					t.join()
-					import sys
-					sys.exit()
-				else:
-					print "Not a valid command"
-		except KeyboardInterrupt:
-			is_playing = False
-			t.join()
-			import sys
-			sys.exit()
+	try:
+		while True:
+			user_input = str(raw_input("Enter a command: "))
+			
+			if user_input == "pause":
+				toggle_pause = True
+			elif user_input == 'next':
+				next = True
+			elif user_input == 'search':
+				break
+			elif user_input == 'exit':
+				is_playing = False
+				t.join()
+				import sys
+				sys.exit()
+			else:
+				print "Not a valid command"
+	except KeyboardInterrupt:
+		is_playing = False
+		t.join()
+		import sys
+		sys.exit()
 
 
 

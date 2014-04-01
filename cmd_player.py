@@ -68,7 +68,7 @@ while True:
 		print str(i) + ') ' + search_results[unicode('mix_set')][unicode('mixes')][i][unicode('name')].encode('utf-8')
 
 	print 'Enter mix number:'
-	if is_playing:
+	if is_playing is True:
 		is_playing = False
 		t.join()
 	player.currentMix_json = search_results[unicode('mix_set')][unicode('mixes')][int(raw_input())]

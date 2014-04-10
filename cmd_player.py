@@ -25,7 +25,7 @@ def play():
 	while True:
 
 		while True:
-			time.sleep(0.1)
+			time.sleep(0.5)
 			if is_playing is False:
 				player.vlc_player.stop()
 				break

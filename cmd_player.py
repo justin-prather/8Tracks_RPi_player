@@ -1,7 +1,7 @@
 from Gr8_Tracks import Gr8_Tracks
 import threading
 import vlc
-import os
+import os, time
 
 is_playing = False
 toggle_pause = False
@@ -25,6 +25,7 @@ def play():
 	while True:
 
 		while True:
+			time.sleep(0.1)
 			if is_playing is False:
 				player.vlc_player.stop()
 				break

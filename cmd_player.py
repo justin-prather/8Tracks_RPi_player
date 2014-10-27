@@ -53,7 +53,7 @@ os.putenv('SDL_MOUSEDEV'   , '/dev/input/touchscreen')
 
 
 player = Gr8_Tracks( 'ef1b85bdb35b68b0f7ce0f7d6a575c528e600405', 'justin.prather1',
-			     'camerasrule')
+			     '*************')
 
 player.get_play_token()
 
